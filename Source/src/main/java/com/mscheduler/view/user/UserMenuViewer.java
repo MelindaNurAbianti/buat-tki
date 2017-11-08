@@ -61,7 +61,7 @@ public class UserMenuViewer extends AbstractUserViewer {
 //            inputPassword = new String(pwd);
 
             stat = uc.checkLogin(input, inputPassword);
-
+            System.out.println(stat);
             if (stat.equals("0")) {
                 System.out.println("Invalid email or password, please try again.");
             } else if (stat.equals("2")) {

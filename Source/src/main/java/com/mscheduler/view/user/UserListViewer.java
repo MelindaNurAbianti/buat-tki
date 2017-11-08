@@ -7,27 +7,27 @@ import java.util.List;
 import com.mscheduler.model.User;
 
 public class UserListViewer extends AbstractUserViewer {
+
     private int page;
     private int maxPage;
 
     //singleton + constructor
-        private static UserListViewer instance;
+    private static UserListViewer instance;
 
-        static{
-            instance = new UserListViewer();
-        }
+    static {
+        instance = new UserListViewer();
+    }
 
-        public static UserListViewer getInstance(){
-          return instance;
-        }
-        
-        private UserListViewer() {
-            super();
-            this.init();
-        }
+    public static UserListViewer getInstance() {
+        return instance;
+    }
+
+    private UserListViewer() {
+        super();
+        this.init();
+    }
     //end of singleton
-    
-    
+
     @Override
     public void init() {
         super.init();
@@ -40,53 +40,53 @@ public class UserListViewer extends AbstractUserViewer {
     public String getText() {
         return this.getText(this.page);
     }
-    
+
     public String getText(int page) {
         //Kamus
-        String str,detail;
+        String str, detail;
         List<User> list_user;
-        
+
         //Algoritma
         list_user = uc.listUser();
         detail = "";
-        
+
         boolean first = true;
-        for(User u : list_user){
+        for (User u : list_user) {
             if (first) {
-                detail += u.getName() +" : "+ u.getEmail();
+                detail += u.getName() + " : " + u.getEmail();
                 first = false;
-            }else{
-                detail += "\n"+u.getName() +" : "+ u.getEmail();
+            } else {
+                detail += "\n" + u.getName() + " : " + u.getEmail();
             }
         }
-        
+
         this.maxPage = Utilities.countMaxPage(detail);
         str = "";
         if (this.maxPage == 1) {
-            str = Utilities.getPage(detail,1)+"\n";
+            str = Utilities.getPage(detail, 1) + "\n";
             this.exit();
-        }else {
+        } else {
             str = "-----------\n"
-                + "Page " + page + " of "+this.maxPage+"\n"
-                + "-----------\n";
-            
+                    + "Page " + page + " of " + this.maxPage + "\n"
+                    + "-----------\n";
+
             if (page < this.maxPage) {
-                str += Utilities.getPage(detail,page)+"\n"
-                    + "----more----\n";
-            }else{
-                str += Utilities.getPage(detail,page)+"\n";
+                str += Utilities.getPage(detail, page) + "\n"
+                        + "----more----\n";
+            } else {
+                str += Utilities.getPage(detail, page) + "\n";
             }
         }
         return str;
     }
-    
+
     public void handleInput(Scanner sc) {
         super.handleInput(sc);
         //Kamus
         String input;
         String[] splitString;
         int pageSearch;
-        
+
         //Algoritma
         while (!this.exitCalled) {
             this.printMenu();
@@ -102,16 +102,30 @@ public class UserListViewer extends AbstractUserViewer {
                     this.page++;
                     if (this.page <= maxPage) {
                         System.out.print(this.getText());
-                    }else{
+                    } else {
                         this.exit();
                     }
                     break;
                 default:
                     splitString = input.split(" ");
                     if (splitString[0].equalsIgnoreCase("p")) {
-                        pageSearch = Integer.parseInt(splitString[1]);
-                        if (pageSearch <= maxPage) {
+                        //Menambahkan pesan apabila data nomor page bersifat null
+                        if (splitString.length < 2) {
+                            System.out.println("Mohon masukkan jumlah halaman!");
+                            System.exit(0);
+                        }
+                        pageSearch = Integer.parseInt(splitString[1]);;
+                        System.out.println("Page : " + pageSearch);
+                        if (pageSearch > 0 && pageSearch <= maxPage) {
                             this.page = pageSearch;
+                            System.out.print(this.getText());
+                        } else if (pageSearch < 1) {
+                            this.page = 1;
+                            System.out.println("Tidak ada halaman " + pageSearch);
+                            System.out.print(this.getText());
+                        } else {
+                            this.page = maxPage;
+                            System.out.println("Tidak ada halaman " + pageSearch);
                             System.out.print(this.getText());
                         }
                     }
@@ -119,9 +133,9 @@ public class UserListViewer extends AbstractUserViewer {
             }
         }
         System.out.println("Exiting...");
-   
+
     }
-    
+
     @Override
     public String getHelp() {
         return "n: next page\n"

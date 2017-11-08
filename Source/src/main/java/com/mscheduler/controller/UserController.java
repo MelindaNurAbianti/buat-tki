@@ -74,6 +74,8 @@ public class UserController extends AbstractController {
         return usr.readAll();
     }
     
+    //Error kalau misalkan dia bentuknya ga p (sesuatu), jadi index out of bound
+    //Mungkin set default jadi 1 aja kalau ga diisi
     public String listUserAll(int page) {
         int i,LastIndex;
         String str = "";
@@ -101,7 +103,7 @@ public class UserController extends AbstractController {
                 str = "-----------\n"
                         + "Page " + page + " of " + this.maxPage + "\n"
                         + "-----------\n";
-
+                System.out.println("Page "+page);
                 if (page < this.maxPage) {
                     str += Utilities.getPage(str, page) + "\n"
                             + "----more----\n";
@@ -122,15 +124,14 @@ public class UserController extends AbstractController {
         return flag;
     }
 
-    //Error di sini
+    //Error di sini : fixed (mengenai cek password)
+    //Bisa set user sekaligus statusnya lewat sini
     public String checkLogin(String email, String pass) {
         String stat;
         User usr = new User();
         
         usr.setEmail(email);
-        usr.setPassword(pass);
-        
-
+        usr.setPassword(pass); 
         
         stat = usr.checkLoginDb(usr);
 

@@ -69,7 +69,7 @@ public class Main {
 
         ArrayList<User> n = (ArrayList<User>) uc.listUser();
         for (int i = 0; i < n.size(); i++) {
-
+            System.out.println(n.get(i).getEmail()+" "+n.get(i).getPassword());
 
         }
         //login
